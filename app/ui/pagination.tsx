@@ -6,14 +6,12 @@ import Link from "next/link";
 import clsx from "clsx";
 import { ArrowLeftIcon, ArrowRightIcon } from "@heroicons/react/24/solid";
 
-function PaginationNumber({
+export function PaginationNumber({
   page,
-  href,
   isActive,
   position,
 }: {
   page: number | string;
-  href: string;
   isActive: boolean;
   position?: "first" | "last" | "middle" | "single";
 }) {
@@ -31,20 +29,20 @@ function PaginationNumber({
   return isActive || position === "middle" ? (
     <div className={className}>{page}</div>
   ) : (
-    <Link href={href} className={className}>
+    <button className={className}>
       {page}
-    </Link>
+    </button>
   );
 }
 
-function PaginationArrow({
-  href,
+export function PaginationArrow({
   direction,
   isDisabled,
+  onClick
 }: {
-  href: string;
   direction: "left" | "right";
   isDisabled?: boolean;
+  onClick(): void;
 }) {
   const className = clsx(
     "flex h-10 w-10 items-center justify-center rounded-md border",
@@ -66,9 +64,9 @@ function PaginationArrow({
   return isDisabled ? (
     <div className={className}>{icon}</div>
   ) : (
-    <Link className={className} href={href}>
+    <button className={className}>
       {icon}
-    </Link>
+    </button>
   );
 }
 

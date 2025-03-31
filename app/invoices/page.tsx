@@ -8,6 +8,7 @@ import InvoicesTable from "../ui/invoices/table";
 import Search from "../ui/search";
 import { fetchInvoicesPages } from "../lib/db";
 import Pagination from "../ui/pagination";
+import { fetchInvoicesForTable } from "../lib/db";
 
 export default async function Page(props: {
   searchParams?: Promise<{ query?: string; page?: string }>;
@@ -16,6 +17,8 @@ export default async function Page(props: {
   const query = searchParams?.query || "";
   const currentPage = Number(searchParams?.page) || 1;
   const totalPages = await fetchInvoicesPages(query);
+
+  const invoices = await fetchInvoicesForTable();
 
   return (
     <div className="w-full">
@@ -26,10 +29,7 @@ export default async function Page(props: {
         <Search placeholder={"Search invoices..."} />
         <CreateInvoice />
       </div>
-      <InvoicesTable query={query} currentPage={currentPage} />
-      <div className="mt-5 flex justify-center w-full">
-        <Pagination totalPages={totalPages} />
-      </div>
+      <InvoicesTable query={query} invoices={invoices} />
     </div>
   );
 }

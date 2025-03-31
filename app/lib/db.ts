@@ -109,11 +109,7 @@ export async function fetchPendingInvoices() {
 }
 
 // Add search functionality
-export async function fetchInvoicesForTable(
-  query: string,
-  currentPage: number
-) {
-  const offset = (currentPage - 1) * ITEMS_PER_PAGE;
+export async function fetchInvoicesForTable() {
 
   const invoices = await sql<InvoiceRaw[]>`
       SELECT
@@ -129,10 +125,8 @@ export async function fetchInvoicesForTable(
       JOIN
         customers ON invoices.customer_id = customers.id
       ORDER BY invoices.date DESC
-      LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset}
     `;
 
-  console.log(invoices);
   return invoices;
 }
 

@@ -13,6 +13,7 @@ export const formatDateToLocal = (dateObj: Date, locale: string = "en-US") => {
     day: "numeric",
     month: "short",
     year: "numeric",
+    timeZone: "utc"
   };
 
   const formatter = new Intl.DateTimeFormat(locale, options);
