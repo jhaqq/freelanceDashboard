@@ -82,7 +82,7 @@ export default function InvoicesTable({
     <div className="mt-6 flow-root">
       <div className="inline-block min-w-full align-middle">
         <div className="rounded-lg bg-gray-50 p-2">
-          <div className="gap-4 px-3 flex flex-wrap sm:flex sm:items-center sm:justify-center md:justify-start">
+          <div className="gap-4 px-3 py-4 flex flex-wrap sm:flex xs:items-center xs:justify-center md:justify-start">
             <button
               className={clsx(
                 "py-2 px-4 bg-gray-50 border rounded-full h-7.5 flex items-center",
