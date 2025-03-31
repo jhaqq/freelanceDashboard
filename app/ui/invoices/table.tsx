@@ -82,7 +82,7 @@ export default function InvoicesTable({
     <div className="mt-6 flow-root">
       <div className="inline-block min-w-full align-middle">
         <div className="rounded-lg bg-gray-50 p-2">
-          <div className="flex gap-4 px-3">
+          <div className="gap-4 px-3 flex flex-wrap sm:flex sm:items-center sm:justify-center md:justify-start">
             <button
               className={clsx(
                 "py-2 px-4 bg-gray-50 border rounded-full h-7.5 flex items-center",
@@ -100,7 +100,7 @@ export default function InvoicesTable({
             >
               <p className="text-sm">All</p>
             </button>
-            <div className="flex items-center">
+            <div className="hidden sm:flex items-center">
               <p>|</p>
             </div>
             <button
@@ -132,7 +132,7 @@ export default function InvoicesTable({
             >
               <p className="text-sm">Paid</p>
             </button>
-            <div className="flex items-center">
+            <div className="hidden sm:flex items-center">
               <p>|</p>
             </div>
             <button
@@ -165,7 +165,7 @@ export default function InvoicesTable({
             >
               <p className="text-sm">Lowest Amount</p>
             </button>
-            <div className="flex items-center">
+            <div className="hidden sm:flex items-center">
               <p>|</p>
             </div>
             <button
