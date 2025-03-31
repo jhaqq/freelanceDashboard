@@ -1,8 +1,11 @@
 export const formatCurrency = (amount: number) => {
-  return (amount / 100).toLocaleString("en-US", {
-    style: "currency",
-    currency: "USD",
-  });
+  if (amount == 0) return "$0.00";
+  else {
+    return (amount / 100).toLocaleString("en-US", {
+      style: "currency",
+      currency: "USD",
+    });
+  }
 };
 
 export const formatDateToLocal = (dateObj: Date, locale: string = "en-US") => {

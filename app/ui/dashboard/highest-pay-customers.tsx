@@ -31,11 +31,10 @@ export function HighestPayCustomer({
           height={32}
         />
         <div className="min-w-0">
-          <p className="truncate text-sm font-semibold md:text-base">{name}</p>
-          <p className="hidden text-sm text-gray-500 sm:block">Joined {date}</p>
+          <p className="truncate text-sm font-semibold 2xl:text-base">{name}</p>
         </div>
       </div>
-      <p className="truncate text-sm font-medium md:text-base">{totalPaid}</p>
+      <p className="truncate text-sm font-medium 2xl:text-base">{totalPaid}</p>
     </div>
   );
 }
@@ -57,10 +56,6 @@ export default async function HighestPayCustomers() {
               notFirst={index > 0}
             />
           ))}
-        </div>
-        <div className="flex items-center pb-2 pt-6">
-          <ArrowPathIcon className="h-5 w-5 text-gray-500" />
-          <h3 className="ml-2 text-sm text-gray-500 ">Updated just now</h3>
         </div>
       </div>
     </div>

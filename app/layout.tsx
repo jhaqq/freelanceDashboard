@@ -1,18 +1,7 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { inter } from "./ui/fonts";
 import "./globals.css";
-import Link from "next/link";
-import SideNav from "./ui/dashboard/sidenav";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+import SideNav from "./ui/sidenav";
 
 export const metadata: Metadata = {
   title: "Dashboard",
@@ -23,19 +12,19 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${inter.className} antialiased`}
       >
         <div className="flex flex-col md:flex-row min-h-screen">
           <div className="w-full flex-none md:w-64">
             <SideNav />
           </div>
-          <div className="flex flex-col grow p-6 md:p-12">
+          <div className="flex flex-col grow p-6 md:p-12 `${inter.className} antialiased`">
             {children}
           </div>
         </div>

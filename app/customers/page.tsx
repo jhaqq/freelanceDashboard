@@ -1,7 +1,12 @@
+import CustomersTable from "../ui/customers/table";
+import Search from "../ui/search";
+
 export default function Page() {
-    return (
-      <div className="flex flex-1 justify-center items-center">
-        <h1 className="text-2xl">Customers</h1>
-      </div>
-    );
-  }
+  return (
+    <div className="w-full">
+      <h1 className="mb-8 text-xl md:text-2xl">Customers</h1>
+      <Search placeholder={"Search customers..."} />
+      <CustomersTable />
+    </div>
+  );
+}

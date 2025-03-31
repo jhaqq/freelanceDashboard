@@ -31,11 +31,11 @@ export function LatestInvoice({
           height={32}
         />
         <div className="min-w-0">
-          <p className="truncate text-sm font-semibold md:text-base">{name}</p>
+          <p className="truncate text-sm font-semibold 2xl:text-base">{name}</p>
           <p className="hidden text-sm text-gray-500 2xl:block">{email}</p>
         </div>
       </div>
-      <p className="truncate text-sm font-medium md:text-base">{amount}</p>
+      <p className="truncate text-sm font-medium 2xl:text-base">{amount}</p>
     </div>
   );
 }
@@ -49,7 +49,7 @@ export default async function LatestInvoices() {
         <div className="bg-white px-6">
           {latestInvoices.map((invoice, index) => (
             <LatestInvoice
-              key={index}
+              key={invoice.id}
               name={invoice.name}
               image_url={invoice.image_url}
               email={invoice.email}
@@ -58,10 +58,7 @@ export default async function LatestInvoices() {
             />
           ))}
         </div>
-        <div className="flex items-center pb-2 pt-6">
-          <ArrowPathIcon className="h-5 w-5 text-gray-500" />
-          <h3 className="ml-2 text-sm text-gray-500 ">Updated just now</h3>
-        </div>
+        
       </div>
     </div>
   );

@@ -31,12 +31,12 @@ export function PendingInvoice({
           height={32}
         />
         <div className="min-w-0">
-          <p className="truncate text-sm font-semibold md:text-base">{name}</p>
+          <p className="truncate text-sm font-semibold 2xl:text-base">{name}</p>
         </div>
       </div>
       <div className="flex flex-col items-end">
-        <p className="truncate text-sm font-medium md:text-base">{amount}</p>
-        <p className="truncate text-sm text-gray-500 font-medium md:text-base">
+        <p className="truncate text-sm font-medium 2xl:text-base">{amount}</p>
+        <p className="truncate text-sm text-gray-500 font-medium 2xl:text-base">
           {date}
         </p>
       </div>
@@ -54,7 +54,7 @@ export default async function PendingInvoices() {
         <div className="bg-white px-6">
           {pendingInvoices.map((invoice, index) => (
             <PendingInvoice
-              key={index}
+              key={invoice.id}
               name={invoice.name}
               date={invoice.date}
               image_url={invoice.image_url}
@@ -62,10 +62,6 @@ export default async function PendingInvoices() {
               notFirst={index > 0}
             />
           ))}
-        </div>
-        <div className="flex items-center pb-2 pt-6">
-          <ArrowPathIcon className="h-5 w-5 text-gray-500" />
-          <h3 className="ml-2 text-sm text-gray-500 ">Updated just now</h3>
         </div>
       </div>
     </div>

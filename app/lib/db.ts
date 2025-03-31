@@ -1,5 +1,14 @@
 import postgres from "postgres";
-import { LatestInvoiceRaw, HighestPayCustomerRaw, PendingInvoiceRaw } from "./definitions";
+import {
+  LatestInvoiceRaw,
+  HighestPayCustomerRaw,
+  PendingInvoiceRaw,
+  Customer,
+  CustomerRaw,
+  InvoiceRaw,
+  CustomerField,
+  InvoiceForm,
+} from "./definitions";
 import { formatCurrency, formatDateToLocal } from "./utils";
 
 const sql = postgres(process.env.DATABASE_URL!);
@@ -79,7 +88,7 @@ export async function fetchHighestPayCustomers() {
 }
 
 export async function fetchPendingInvoices() {
-    const data = await sql<PendingInvoiceRaw[]>`
+  const data = await sql<PendingInvoiceRaw[]>`
     SELECT
     invoices.amount, invoices.date, customers.name, customers.image_url, invoices.id
     FROM
@@ -88,12 +97,89 @@ export async function fetchPendingInvoices() {
     WHERE invoices.status = 'pending'
     ORDER BY invoices.amount DESC
     LIMIT 5
-    `
-    const pendingInvoices = data.map((invoice) => ({
-        ...invoice,
-        amount: formatCurrency(invoice.amount),
-        date: formatDateToLocal(invoice.date)
-    }))
+    `;
+  const pendingInvoices = data.map((invoice) => ({
+    ...invoice,
+    amount: formatCurrency(invoice.amount),
+    date: formatDateToLocal(invoice.date),
+  }));
 
-    return pendingInvoices;
+  return pendingInvoices;
+}
+
+export async function fetchInvoices() {
+    const data = await sql<InvoiceRaw[]>`
+      SELECT
+        customers.id AS customer_id,
+        customers.name,
+        customers.image_url,
+        customers.email,
+        invoices.amount,
+        invoices.date,
+        invoices.status
+      FROM
+        invoices
+      JOIN
+        customers ON invoices.customer_id = customers.id
+      ORDER BY invoices.date DESC
+    `;
+  
+
+  const invoices = data.map((invoice) => ({
+    ...invoice,
+    amount: formatCurrency(invoice.amount),
+    date: formatDateToLocal(invoice.date)
+  }))
+
+  return invoices
+}
+
+export async function fetchInvoiceById() {
+  const data = await sql<InvoiceForm[]>`
+  SELECT
+  invoices.id,
+  invoices.customer_id,
+  invoices.amount,
+  invoices.status
+  FROM invoices
+  WHERE invoices.id = ${id}
+  `
+}
+
+export async function fetchFilteredCustomers() {
+  const data = await sql<CustomerRaw[]>`
+  SELECT
+    customers.id AS customer_id,
+    customers.name,
+    customers.email,
+    customers.image_url,
+    COALESCE(COUNT(invoices.id), 0) AS total_invoices,
+    SUM(CASE WHEN invoices.status = 'pending' THEN invoices.amount ELSE 0 END) AS total_pending,
+    SUM(CASE WHEN invoices.status = 'paid' THEN invoices.amount ELSE 0 END) AS total_paid
+    FROM
+      customers
+    LEFT JOIN
+      invoices ON invoices.customer_id = customers.id
+    GROUP BY
+      customers.id, customers.name, customers.email, customers.image_url
+  `;
+
+  const customers = data.map((customer) => ({
+    ...customer,
+    total_pending: formatCurrency(customer.total_pending),
+    total_paid: formatCurrency(customer.total_paid),
+  }));
+
+  return customers;
+}
+
+export async function fetchCustomers() {
+  const customers = await sql<CustomerField[]>`
+  SELECT
+    id,
+    name
+  FROM customers
+  ORDER BY name ASC
+  `
+  return customers
 }

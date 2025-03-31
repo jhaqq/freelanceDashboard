@@ -1,4 +1,3 @@
-import Card from "./ui/dashboard/card";
 import CardWrapper from "./ui/dashboard/card-wrapper";
 import HighestPayCustomers from "./ui/dashboard/highest-pay-customers";
 import LatestInvoices from "./ui/dashboard/latest-invoices";
