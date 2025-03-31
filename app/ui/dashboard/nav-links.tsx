@@ -12,7 +12,8 @@ export default function NavLinks() {
   ];
 
   const pathname = usePathname();
-
+  
+  // Add icons
   return (
     <>
       {links.map((link) => (
@@ -20,7 +21,7 @@ export default function NavLinks() {
           key={link.href}
           href={link.href}
           className={clsx(
-            "bg-gray-50 h-[48px] w-full rounded-md flex grow items-center justify-start mb-3 md:flex-none md:justify-start md:p-2 md:px-3",
+            "bg-gray-50 h-[48px] w-full rounded-md flex grow items-center justify-start mb-3 md:flex-none md:justify-start p-2 md:px-3",
             {
               "bg-yellow-100 text-yellow-600":
                 link.href.length > 1

@@ -12,6 +12,7 @@ import {
 import { formatCurrency, formatDateToLocal } from "./utils";
 
 const sql = postgres(process.env.DATABASE_URL!);
+const ITEMS_PER_PAGE = 6;
 
 export async function fetchCardInfo() {
   const customerCountPromise = sql`SELECT COUNT(*) FROM customers`;
@@ -107,10 +108,16 @@ export async function fetchPendingInvoices() {
   return pendingInvoices;
 }
 
-export async function fetchInvoices() {
-    const data = await sql<InvoiceRaw[]>`
+// Add search functionality
+export async function fetchInvoicesForTable(
+  query: string,
+  currentPage: number
+) {
+  const offset = (currentPage - 1) * ITEMS_PER_PAGE;
+
+  const invoices = await sql<InvoiceRaw[]>`
       SELECT
-        customers.id AS customer_id,
+        invoices.id,
         customers.name,
         customers.image_url,
         customers.email,
@@ -122,19 +129,14 @@ export async function fetchInvoices() {
       JOIN
         customers ON invoices.customer_id = customers.id
       ORDER BY invoices.date DESC
+      LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset}
     `;
-  
 
-  const invoices = data.map((invoice) => ({
-    ...invoice,
-    amount: formatCurrency(invoice.amount),
-    date: formatDateToLocal(invoice.date)
-  }))
-
-  return invoices
+  console.log(invoices);
+  return invoices;
 }
 
-export async function fetchInvoiceById() {
+export async function fetchInvoiceById(id: string) {
   const data = await sql<InvoiceForm[]>`
   SELECT
   invoices.id,
@@ -143,9 +145,34 @@ export async function fetchInvoiceById() {
   invoices.status
   FROM invoices
   WHERE invoices.id = ${id}
-  `
+  `;
+
+  const invoice = data.map((invoice) => ({
+    ...invoice,
+    amount: invoice.amount / 100,
+  }));
+
+  return invoice[0];
 }
 
+export async function fetchInvoicesPages(query: string) {
+  const data = await sql`
+  SELECT COUNT(*)
+  FROM invoices
+  JOIN customers ON invoices.customer_id = customers.id
+  WHERE 
+      customers.name ILIKE ${`%${query}%`} OR
+      customers.email ILIKE ${`%${query}%`} OR
+      invoices.amount::text ILIKE ${`%${query}%`} OR
+      invoices.date::text ILIKE ${`%${query}%`} OR
+      invoices.status ILIKE ${`%${query}%`}
+  `;
+
+  const totalPages = Math.ceil(Number(data[0].count) / ITEMS_PER_PAGE)
+  return totalPages
+}
+
+// Add search functionality
 export async function fetchFilteredCustomers() {
   const data = await sql<CustomerRaw[]>`
   SELECT
@@ -180,6 +207,6 @@ export async function fetchCustomers() {
     name
   FROM customers
   ORDER BY name ASC
-  `
-  return customers
+  `;
+  return customers;
 }

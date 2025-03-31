@@ -1,7 +1,14 @@
+import { fetchCustomers, fetchInvoiceById } from "@/app/lib/db";
 import Breadcrumbs from "@/app/ui/invoices/breadcrumbs";
 import EditInvoiceForm from "@/app/ui/invoices/edit-form";
 
-export default function Page() {
+export default async function Page(props:  { params: Promise<{ id: string }> }) {
+    const params = await props.params;
+    const id = params.id
+    const [invoice, customers] = await Promise.all([
+        fetchInvoiceById(id),
+        fetchCustomers()
+    ])
     return (
         <main>
             <Breadcrumbs
@@ -10,12 +17,12 @@ export default function Page() {
                     {
                         label: "Edit Invoice",
                         // Need to add ID to href
-                        href: `/invoices/6970f423-cacf-4daa-a2f2-239b72134579/edit`,
+                        href: `/invoices/${id}/edit`,
                         active: true
                     }
                 ]}
                 />
-                <EditInvoiceForm />
+                <EditInvoiceForm invoice={invoice} customers={customers} />
         </main>
     )
 }

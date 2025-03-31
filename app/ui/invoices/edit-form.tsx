@@ -1,17 +1,32 @@
+"use client";
+
+import { updateInvoice } from "@/app/lib/actions";
+import { CustomerField, InvoiceForm } from "@/app/lib/definitions";
+import { State } from "@/app/lib/actions";
 import {
   UserCircleIcon,
   CheckIcon,
   ClockIcon,
   CurrencyDollarIcon,
 } from "@heroicons/react/24/outline";
+import { useActionState } from "react";
+import Link from "next/link";
+import { Button } from "../button";
 
-export default function EditInvoiceForm() {
-
-  
+export default function EditInvoiceForm({
+  invoice,
+  customers,
+}: {
+  invoice: InvoiceForm;
+  customers: CustomerField[];
+}) {
+  const initialState: State = { message: null, errors: {} };
+  const updateInvoiceWithId = updateInvoice.bind(null, invoice.id);
+  const [state, formAction] = useActionState(updateInvoiceWithId, initialState);
 
   return (
     // Have to implement form action
-    <form>
+    <form action={formAction}>
       <div className="rounded-md bg-gray-50 md:p-6">
         <div className="mb-4">
           <label htmlFor="customer" className="mb-2 block text-sm font-medium">
@@ -21,12 +36,17 @@ export default function EditInvoiceForm() {
             <select
               id="customer"
               name="customerId"
+              defaultValue={invoice.customer_id}
               className="peer block w-full cursor-pointer rounded-md bg-white border border-gray-200 py-2 pl-10 text-small placeholder:text-gray-500"
             >
               <option value="" disabled>
                 Select a customer
               </option>
-              <option value="">Jacob Haqq</option>
+              {customers.map((customer) => (
+                <option key={customer.id} value={customer.id}>
+                  {customer.name}
+                </option>
+              ))}
             </select>
             <UserCircleIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
           </div>
@@ -43,6 +63,7 @@ export default function EditInvoiceForm() {
                 name="amount"
                 type="number"
                 step=".01"
+                defaultValue={invoice.amount}
                 placeholder="Enter USD amount"
                 className="peer block w-full rounded-md bg-white border border-gray-200 py-2 pl-10 text-sm placeholder:text-gray-500"
               />
@@ -64,6 +85,7 @@ export default function EditInvoiceForm() {
                   name="status"
                   type="radio"
                   value="pending"
+                  defaultChecked={invoice.status === "pending"}
                   className="h-4 w-4 cursor-pointer border-gray-300 bg-gray-100"
                 />
                 <label
@@ -78,6 +100,7 @@ export default function EditInvoiceForm() {
                   id="paid"
                   name="status"
                   type="radio"
+                  defaultChecked={invoice.status === "paid"}
                   value="paid"
                   className="h-4 w-4 cursor-pointer border-gray-300 bg-gray-100"
                 />
@@ -91,6 +114,15 @@ export default function EditInvoiceForm() {
             </div>
           </div>
         </fieldset>
+      </div>
+      <div className="mt-6 flex justify-end gap-4">
+        <Link
+          href="/invoices"
+          className="flex h-10 items-center rounded-lg bg-gray-100 px-4 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200"
+        >
+          Cancel
+        </Link>
+        <Button type="submit">Edit Invoice</Button>
       </div>
     </form>
   );
